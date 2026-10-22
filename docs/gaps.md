@@ -20,7 +20,7 @@ establish cross-platform reliability.
 
 Document renaming: desktop renaming requires a filesystem that supports hard links (exFAT/FAT drives and some network shares refuse it). Behaviour: [UI parity](ui-parity.md).
 
-Mobile layout (phones and narrow windows, chosen at the first start or in File › Options › General): the toolbar holds the commands a phone needs most, the page fits the width and a finger drag scrolls it. Missing: selection handles to drag the ends of a selection, the contextual tabs (tables, pictures, equations), and narrow layouts for the panes, the dialogs and the Print page. Behaviour: [UI parity](ui-parity.md).
+Mobile layout (phones and narrow windows, chosen at the web app's first visit or in File › Options › General): the toolbar holds the commands a phone needs most, the page fits the width and a finger drag scrolls it. Missing: selection handles to drag the ends of a selection, the contextual tabs (tables, pictures, equations), and narrow layouts for the panes, the dialogs and the Print page. Behaviour: [UI parity](ui-parity.md).
 
 ## Ranked
 

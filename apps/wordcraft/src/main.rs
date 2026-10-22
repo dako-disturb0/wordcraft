@@ -459,12 +459,6 @@ fn main() -> eframe::Result {
             if files.is_empty() && other_files.is_empty() && !sample && control_port.is_none() {
                 app.start_screen();
             }
-            // The first start asks which layout to use: Automatic (the mobile layout in a narrow
-            // window or on a touch screen held like a phone), Mobile or Desktop. Runs without saved
-            // settings, the sample and the control channel (agents) aren't asked.
-            if prefs_enabled() && !sample && control_port.is_none() {
-                app.ask_layout();
-            }
             for f in files {
                 if let Err(e) = app.run("file.open", serde_json::json!({"path": f})) {
                     log::warn!("{f}: {e}");

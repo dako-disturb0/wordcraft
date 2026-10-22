@@ -1,9 +1,9 @@
-//! The layout question: at the first start a window asks whether WordCraft should use the mobile
-//! layout, the desktop layout, or pick one by itself from the screen (Automatic, highlighted). The
-//! answer is the File › Options › General › Interface layout setting ([`crate::mobile`]); until it
-//! is given WordCraft uses the desktop layout, as before. Hosts open it with
-//! [`WordApp::ask_layout`] once the settings are restored; the mobile layout's menu (Choose
-//! layout…) and `ui.layoutSetup` bring it back.
+//! The layout question: at the web app's first visit a window asks whether WordCraft should use the
+//! mobile layout, the desktop layout, or pick one by itself from the screen (Automatic,
+//! highlighted). The answer is the File › Options › General › Interface layout setting
+//! ([`crate::mobile`]); until it is given WordCraft uses the desktop layout, as before. The web app
+//! opens it with [`WordApp::ask_layout`] once the settings are restored (the desktop app doesn't
+//! ask); the mobile layout's menu (Choose layout…) and `ui.layoutSetup` bring it back.
 
 use egui::{Align2, Color32, CornerRadius, Rect, Sense, Stroke, Ui, pos2, vec2};
 

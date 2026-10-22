@@ -579,7 +579,7 @@ fn theme_picker(app: &mut WordApp, ui: &mut Ui) {
 }
 
 /// Interface layout: Automatic (the mobile layout on phones and in narrow windows), Mobile or
-/// Desktop. The first start asks ([`crate::layout_setup`]).
+/// Desktop. The web app asks at the first visit ([`crate::layout_setup`]).
 fn layout_picker(app: &mut WordApp, ui: &mut Ui) {
     use crate::mobile::LayoutMode;
     ui.horizontal(|ui| {

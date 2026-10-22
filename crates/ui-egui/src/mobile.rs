@@ -3,8 +3,8 @@
 //! The setting ([`LayoutMode`]: File › Options › General › Interface layout, `ui.layout`) is
 //! Desktop, Mobile or Automatic. Automatic shows the mobile layout in a narrow window and on a
 //! phone held either way, and follows the window as it is resized or turned ([`auto_mobile`]). The
-//! first start asks which one to use ([`crate::layout_setup`]); until it has been answered
-//! WordCraft looks as it always did.
+//! web app asks at the first visit which one to use ([`crate::layout_setup`]); until it has been
+//! answered WordCraft looks as it always did.
 //!
 //! The mobile layout keeps the page and moves the commands within a thumb's reach: a bar at the
 //! top with File (the Backstage), the document's name, Undo, Redo and a menu (Save, Search

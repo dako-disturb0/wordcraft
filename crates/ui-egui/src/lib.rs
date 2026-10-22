@@ -338,8 +338,8 @@ pub struct UiState {
     /// which shows the mobile layout on phones and in narrow windows ([`mobile`]). An unknown saved
     /// value reads as Desktop.
     pub layout: mobile::LayoutMode,
-    /// The user has chosen the layout (the layout question at the first start, File › Options):
-    /// until then the question comes up at start-up ([`WordApp::ask_layout`]).
+    /// The user has chosen the layout (the web app's layout question, File › Options): until then
+    /// the web app asks at start-up ([`WordApp::ask_layout`]).
     pub layout_chosen: bool,
     /// File › Options › Display: print the page colour (off, as in Word).
     pub print_backgrounds: bool,
@@ -754,12 +754,12 @@ impl WordApp {
         self.ui.start_screen
     }
 
-    /// The first start asks which layout to use ([`layout_setup`]): Automatic (the mobile layout
-    /// on phones and in narrow windows), Mobile or Desktop. Hosts call this after
-    /// [`WordApp::apply_prefs`], as they call [`WordApp::start_screen`]; [`WordApp::new`] never
-    /// does, so tests, `ui_shot` and windows opened for a document start without it. Once it has
-    /// been answered, or the layout chosen in File › Options, it isn't asked again. Returns whether
-    /// it shows.
+    /// The web app's first visit asks which layout to use ([`layout_setup`]): Automatic (the
+    /// mobile layout on phones and in narrow windows), Mobile or Desktop. The web app calls this
+    /// after [`WordApp::apply_prefs`], as it calls [`WordApp::start_screen`]; the desktop app and
+    /// [`WordApp::new`] never do, so tests, `ui_shot` and windows opened for a document start
+    /// without it. Once it has been answered, or the layout chosen in File › Options, it isn't
+    /// asked again. Returns whether it shows.
     pub fn ask_layout(&mut self) -> bool {
         if !self.ui.layout_chosen && self.mobile.setup.is_none() {
             self.mobile.setup = Some(layout_setup::Setup::new(mobile::LayoutMode::Auto));
