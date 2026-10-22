@@ -2623,3 +2623,22 @@ preview	Title	Título
 	All Fonts	Todas las fuentes
 	Spike	Acumulador
 	Insert Spike	Insertar acumulador
+
+# The mobile layout and the layout question at the first start.
+	Interface layout:	Diseño de la interfaz:
+	Desktop	Escritorio
+	Mobile	Móvil
+	Automatic uses the mobile layout on phones and narrow windows, and the desktop layout on larger screens.	Automático usa el diseño móvil en teléfonos y ventanas estrechas, y el diseño de escritorio en pantallas más grandes.
+	Choose a layout	Elige un diseño
+	WordCraft can fit its layout to your screen. You can change it later in File › Options › General.	WordCraft puede adaptar su diseño a tu pantalla. Puedes cambiarlo más tarde en Archivo › Opciones › General.
+	Recommended	Recomendado
+	Switches between the mobile and desktop layouts by itself as the window changes size.	Cambia por sí solo entre el diseño móvil y el de escritorio según el tamaño de la ventana.
+	Large touch buttons, a toolbar at the bottom and pages that fit the screen.	Botones táctiles grandes, una barra de herramientas abajo y páginas que se ajustan a la pantalla.
+	The full ribbon, rulers and status bar, for a mouse and keyboard.	La cinta de opciones completa, las reglas y la barra de estado, para ratón y teclado.
+	Screen size: {width} × {height}	Tamaño de pantalla: {width} × {height}
+	Automatic uses the mobile layout on this screen.	Automático usa el diseño móvil en esta pantalla.
+	Automatic uses the desktop layout on this screen.	Automático usa el diseño de escritorio en esta pantalla.
+	Continue	Continuar
+	More options	Más opciones
+	Use desktop layout	Usar el diseño de escritorio
+	Choose layout…	Elegir diseño…

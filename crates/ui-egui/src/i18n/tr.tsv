@@ -2653,3 +2653,22 @@ preview	Title	Örnek
 	All Fonts	Tüm Yazı Tipleri
 	Spike	Biriktirici
 	Insert Spike	Biriktiriciyi Ekle
+
+# The mobile layout and the layout question at the first start.
+	Interface layout:	Arayüz düzeni:
+	Desktop	Masaüstü
+	Mobile	Mobil
+	Automatic uses the mobile layout on phones and narrow windows, and the desktop layout on larger screens.	Otomatik seçeneği telefonlarda ve dar pencerelerde mobil düzeni, daha büyük ekranlarda masaüstü düzenini kullanır.
+	Choose a layout	Bir düzen seçin
+	WordCraft can fit its layout to your screen. You can change it later in File › Options › General.	WordCraft, düzenini ekranınıza uydurabilir. Bunu daha sonra Dosya › Seçenekler › Genel bölümünden değiştirebilirsiniz.
+	Recommended	Önerilen
+	Switches between the mobile and desktop layouts by itself as the window changes size.	Pencere boyutu değiştikçe mobil ve masaüstü düzenleri arasında kendiliğinden geçiş yapar.
+	Large touch buttons, a toolbar at the bottom and pages that fit the screen.	Büyük dokunmatik düğmeler, altta bir araç çubuğu ve ekrana sığan sayfalar.
+	The full ribbon, rulers and status bar, for a mouse and keyboard.	Fare ve klavye için tam şerit, cetveller ve durum çubuğu.
+	Screen size: {width} × {height}	Ekran boyutu: {width} × {height}
+	Automatic uses the mobile layout on this screen.	Otomatik seçeneği bu ekranda mobil düzeni kullanır.
+	Automatic uses the desktop layout on this screen.	Otomatik seçeneği bu ekranda masaüstü düzenini kullanır.
+	Continue	Devam
+	More options	Diğer seçenekler
+	Use desktop layout	Masaüstü düzenini kullan
+	Choose layout…	Düzen seç…

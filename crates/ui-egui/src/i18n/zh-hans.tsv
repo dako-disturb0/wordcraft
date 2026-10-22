@@ -2269,3 +2269,22 @@
 	All Fonts	所有字体
 	Spike	图文场
 	Insert Spike	插入图文场
+
+# The mobile layout and the layout question at the first start.
+	Interface layout:	界面布局：
+	Desktop	桌面
+	Mobile	移动
+	Automatic uses the mobile layout on phones and narrow windows, and the desktop layout on larger screens.	“自动”在手机和窄窗口中使用移动布局，在较大的屏幕上使用桌面布局。
+	Choose a layout	选择布局
+	WordCraft can fit its layout to your screen. You can change it later in File › Options › General.	WordCraft 可以根据屏幕调整布局。以后可以在“文件 › 选项 › 常规”中更改。
+	Recommended	推荐
+	Switches between the mobile and desktop layouts by itself as the window changes size.	随窗口大小变化，自动在移动布局和桌面布局之间切换。
+	Large touch buttons, a toolbar at the bottom and pages that fit the screen.	大尺寸触控按钮、底部工具栏，页面适应屏幕宽度。
+	The full ribbon, rulers and status bar, for a mouse and keyboard.	完整的功能区、标尺和状态栏，适合鼠标和键盘。
+	Screen size: {width} × {height}	屏幕尺寸：{width} × {height}
+	Automatic uses the mobile layout on this screen.	在此屏幕上，“自动”使用移动布局。
+	Automatic uses the desktop layout on this screen.	在此屏幕上，“自动”使用桌面布局。
+	Continue	继续
+	More options	更多选项
+	Use desktop layout	使用桌面布局
+	Choose layout…	选择布局…

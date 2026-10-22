@@ -8,7 +8,9 @@
 //! `{"steps": n}` to run extra frames, or `{"wait": ms}` to keep running frames for a while (for
 //! background work such as a Zotero session). The window is 1440×900 pt at 2× and opens the sample
 //! document unless the first line is `{"empty": true}`; `{"empty": true, "startScreen": true}`
-//! starts the way the desktop app does with nothing to open (File › Home, #766).
+//! starts the way the desktop app does with nothing to open (File › Home, #766). `"layoutSetup":
+//! true` on the first line shows the layout question the first start asks; `{"width": 390,
+//! "height": 844}` and `ui.layout` (`engine.execute`) shoot the mobile layout.
 
 use wordcraft_engine::Session;
 use wordcraft_ui_egui::{ControlRequest, Services, WordApp};
@@ -30,6 +32,9 @@ fn main() {
     app.integrated_titlebar = true;
     if lines.first().is_some_and(|l| l.get("startScreen").is_some()) {
         app.start_screen();
+    }
+    if lines.first().is_some_and(|l| l.get("layoutSetup").is_some()) {
+        app.ask_layout();
     }
     let w = lines.iter().find_map(|l| l.get("width").and_then(|v| v.as_f64())).unwrap_or(1440.0) as f32;
     let h = lines.iter().find_map(|l| l.get("height").and_then(|v| v.as_f64())).unwrap_or(900.0) as f32;

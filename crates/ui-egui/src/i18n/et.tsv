@@ -2291,3 +2291,22 @@
 	All Fonts	Kõik fondid
 	Spike	Koguja
 	Insert Spike	Lisa kogujast
+
+# The mobile layout and the layout question at the first start.
+	Interface layout:	Kasutajaliidese paigutus:
+	Desktop	Arvuti
+	Mobile	Mobiil
+	Automatic uses the mobile layout on phones and narrow windows, and the desktop layout on larger screens.	Automaatne valik kasutab telefonides ja kitsastes akendes mobiilipaigutust ning suurematel ekraanidel arvutipaigutust.
+	Choose a layout	Vali paigutus
+	WordCraft can fit its layout to your screen. You can change it later in File › Options › General.	WordCraft saab oma paigutuse ekraanile sobitada. Seda saab hiljem muuta jaotises Fail › Valikud › Üldine.
+	Recommended	Soovitatav
+	Switches between the mobile and desktop layouts by itself as the window changes size.	Lülitub akna suuruse muutudes ise mobiili- ja arvutipaigutuse vahel.
+	Large touch buttons, a toolbar at the bottom and pages that fit the screen.	Suured puutenupud, tööriistariba all ja ekraanile mahtuvad lehed.
+	The full ribbon, rulers and status bar, for a mouse and keyboard.	Täielik menüülint, joonlauad ja olekuriba hiire ja klaviatuuri jaoks.
+	Screen size: {width} × {height}	Ekraani suurus: {width} × {height}
+	Automatic uses the mobile layout on this screen.	Automaatne valik kasutab sellel ekraanil mobiilipaigutust.
+	Automatic uses the desktop layout on this screen.	Automaatne valik kasutab sellel ekraanil arvutipaigutust.
+	Continue	Jätka
+	More options	Rohkem valikuid
+	Use desktop layout	Kasuta arvutipaigutust
+	Choose layout…	Vali paigutus…

@@ -2269,3 +2269,22 @@
 	All Fonts	Усі шрифти
 	Spike	Накопичувач
 	Insert Spike	Вставити з накопичувача
+
+# The mobile layout and the layout question at the first start.
+	Interface layout:	Макет інтерфейсу:
+	Desktop	Настільний
+	Mobile	Мобільний
+	Automatic uses the mobile layout on phones and narrow windows, and the desktop layout on larger screens.	Автоматичний режим використовує мобільний макет на телефонах і у вузьких вікнах, а настільний — на більших екранах.
+	Choose a layout	Виберіть макет
+	WordCraft can fit its layout to your screen. You can change it later in File › Options › General.	WordCraft може пристосувати макет до вашого екрана. Змінити його можна пізніше в розділі Файл › Параметри › Загальні.
+	Recommended	Рекомендовано
+	Switches between the mobile and desktop layouts by itself as the window changes size.	Сам перемикається між мобільним і настільним макетом, коли змінюється розмір вікна.
+	Large touch buttons, a toolbar at the bottom and pages that fit the screen.	Великі сенсорні кнопки, панель інструментів унизу та сторінки за шириною екрана.
+	The full ribbon, rulers and status bar, for a mouse and keyboard.	Повна стрічка, лінійки й рядок стану — для миші та клавіатури.
+	Screen size: {width} × {height}	Розмір екрана: {width} × {height}
+	Automatic uses the mobile layout on this screen.	Автоматичний режим використовує на цьому екрані мобільний макет.
+	Automatic uses the desktop layout on this screen.	Автоматичний режим використовує на цьому екрані настільний макет.
+	Continue	Продовжити
+	More options	Інші параметри
+	Use desktop layout	Використовувати настільний макет
+	Choose layout…	Вибрати макет…

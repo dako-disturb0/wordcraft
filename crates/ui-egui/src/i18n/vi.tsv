@@ -2696,3 +2696,22 @@ template	Letter	Thư
 	All Fonts	Tất cả phông chữ
 	Spike	Bộ gom
 	Insert Spike	Chèn bộ gom
+
+# The mobile layout and the layout question at the first start.
+	Interface layout:	Bố cục giao diện:
+	Desktop	Máy tính
+	Mobile	Di động
+	Automatic uses the mobile layout on phones and narrow windows, and the desktop layout on larger screens.	Chế độ tự động dùng bố cục di động trên điện thoại và cửa sổ hẹp, và bố cục máy tính trên màn hình lớn hơn.
+	Choose a layout	Chọn bố cục
+	WordCraft can fit its layout to your screen. You can change it later in File › Options › General.	WordCraft có thể điều chỉnh bố cục cho vừa màn hình của bạn. Bạn có thể thay đổi sau trong Tệp › Tùy chọn › Chung.
+	Recommended	Khuyên dùng
+	Switches between the mobile and desktop layouts by itself as the window changes size.	Tự chuyển giữa bố cục di động và bố cục máy tính khi kích thước cửa sổ thay đổi.
+	Large touch buttons, a toolbar at the bottom and pages that fit the screen.	Nút cảm ứng lớn, thanh công cụ ở dưới cùng và trang vừa với màn hình.
+	The full ribbon, rulers and status bar, for a mouse and keyboard.	Ribbon đầy đủ, thước và thanh trạng thái, dành cho chuột và bàn phím.
+	Screen size: {width} × {height}	Kích thước màn hình: {width} × {height}
+	Automatic uses the mobile layout on this screen.	Chế độ tự động dùng bố cục di động trên màn hình này.
+	Automatic uses the desktop layout on this screen.	Chế độ tự động dùng bố cục máy tính trên màn hình này.
+	Continue	Tiếp tục
+	More options	Tùy chọn khác
+	Use desktop layout	Dùng bố cục máy tính
+	Choose layout…	Chọn bố cục…

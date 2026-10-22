@@ -1219,6 +1219,12 @@ pub fn paint(p: &Painter, r: Rect, name: &str, c: Color32, accent: Color32) {
                 pen.fcircle(x, 10.0, 1.3, c);
             }
         }
+        // The mobile layout's File button: three bars.
+        "menu" => {
+            for y in [5.5, 10.0, 14.5] {
+                pen.line(&[(4.0, y), (16.0, y)]);
+            }
+        }
         "launcher" => {
             pen.line(&[(5.0, 5.0), (5.0, 15.0), (15.0, 15.0)]);
             pen.line(&[(8.0, 8.0), (15.0, 15.0)]);

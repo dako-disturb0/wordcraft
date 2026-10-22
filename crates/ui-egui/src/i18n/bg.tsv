@@ -2645,3 +2645,22 @@
 	All Fonts	Всички шрифтове
 	Spike	Натрупване
 	Insert Spike	Вмъкване на натрупаното
+
+# The mobile layout and the layout question at the first start.
+	Interface layout:	Оформление на интерфейса:
+	Desktop	Настолно
+	Mobile	Мобилно
+	Automatic uses the mobile layout on phones and narrow windows, and the desktop layout on larger screens.	„Автоматично“ използва мобилното оформление на телефони и в тесни прозорци, а настолното – на по-големи екрани.
+	Choose a layout	Изберете оформление
+	WordCraft can fit its layout to your screen. You can change it later in File › Options › General.	WordCraft може да нагоди оформлението си към екрана Ви. Можете да го промените по-късно от Файл › Опции › Общи.
+	Recommended	Препоръчително
+	Switches between the mobile and desktop layouts by itself as the window changes size.	Само превключва между мобилното и настолното оформление, когато размерът на прозореца се промени.
+	Large touch buttons, a toolbar at the bottom and pages that fit the screen.	Големи бутони за докосване, лента с инструменти долу и страници, които се побират на екрана.
+	The full ribbon, rulers and status bar, for a mouse and keyboard.	Пълната лента, линийките и лентата на състоянието – за мишка и клавиатура.
+	Screen size: {width} × {height}	Размер на екрана: {width} × {height}
+	Automatic uses the mobile layout on this screen.	„Автоматично“ използва мобилното оформление на този екран.
+	Automatic uses the desktop layout on this screen.	„Автоматично“ използва настолното оформление на този екран.
+	Continue	Продължаване
+	More options	Още опции
+	Use desktop layout	Използване на настолното оформление
+	Choose layout…	Избор на оформление…

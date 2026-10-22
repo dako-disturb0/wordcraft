@@ -2671,3 +2671,22 @@ preview	Title	Titel
 	Moved to:	Flyttat till:
 	Spike	Samlare
 	Insert Spike	Infoga samlare
+
+# The mobile layout and the layout question at the first start.
+	Interface layout:	Gränssnittslayout:
+	Desktop	Dator
+	Mobile	Mobil
+	Automatic uses the mobile layout on phones and narrow windows, and the desktop layout on larger screens.	Automatisk använder mobillayouten på telefoner och i smala fönster och datorlayouten på större skärmar.
+	Choose a layout	Välj en layout
+	WordCraft can fit its layout to your screen. You can change it later in File › Options › General.	WordCraft kan anpassa sin layout efter din skärm. Du kan ändra det senare under Arkiv › Alternativ › Allmänt.
+	Recommended	Rekommenderas
+	Switches between the mobile and desktop layouts by itself as the window changes size.	Växlar själv mellan mobil- och datorlayouten när fönstrets storlek ändras.
+	Large touch buttons, a toolbar at the bottom and pages that fit the screen.	Stora pekknappar, ett verktygsfält längst ned och sidor som passar skärmen.
+	The full ribbon, rulers and status bar, for a mouse and keyboard.	Hela menyfliksområdet, linjaler och statusfältet, för mus och tangentbord.
+	Screen size: {width} × {height}	Skärmstorlek: {width} × {height}
+	Automatic uses the mobile layout on this screen.	Automatisk använder mobillayouten på den här skärmen.
+	Automatic uses the desktop layout on this screen.	Automatisk använder datorlayouten på den här skärmen.
+	Continue	Fortsätt
+	More options	Fler alternativ
+	Use desktop layout	Använd datorlayouten
+	Choose layout…	Välj layout…
