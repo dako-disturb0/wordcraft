@@ -1671,7 +1671,8 @@ impl WordApp {
                 }
                 json!({"layout": self.ui.layout.code(), "chosen": self.ui.layout_chosen, "mobile": self.mobile.active})
             }
-            // The layout question the first start asks, again (the mobile menu's Choose layout…).
+            // The layout question the web app asks at the first visit, again (the mobile menu's Choose
+            // layout…).
             "ui.layoutSetup" => {
                 self.open_layout_setup();
                 json!({"open": true})
