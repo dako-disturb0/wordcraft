@@ -379,7 +379,7 @@ pub fn bottom_bar(app: &mut WordApp, ui: &mut Ui) {
 }
 
 /// A row that scrolls sideways, without a scroll bar: a finger swipes it.
-fn strip(id: impl std::hash::Hash) -> egui::ScrollArea {
+fn strip(id: impl egui::AsIdSalt) -> egui::ScrollArea {
     egui::ScrollArea::horizontal().id_salt(id).scroll_bar_visibility(egui::scroll_area::ScrollBarVisibility::AlwaysHidden)
 }
 
