@@ -1,2 +1,9 @@
 [alias]
 xtask = "run --package xtask --"
+
+# TEMPORARY (CI diagnosis): compiler errors and test failures as GitHub annotations.
+[build]
+rustc-wrapper = ".cargo/ci-annotate-rustc.py"
+
+[target.'cfg(unix)']
+runner = ".cargo/ci-annotate-test.py"
