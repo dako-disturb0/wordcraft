@@ -11,10 +11,291 @@
     #wordcraft_canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
     #wordcraft_loading { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
       color: #555; font: 14px system-ui, sans-serif; pointer-events: none; }
+
+    /* Floating Virtual Trackpad Styles */
+    #virtual_trackpad {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(30, 34, 42, 0.7);
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+      cursor: move;
+    }
+
+    #virtual_trackpad.repositioning {
+      transform: scale(1.18);
+      border-color: #007bff;
+      box-shadow: 0 0 16px rgba(0, 123, 255, 0.8), 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    #virtual_trackpad svg {
+      pointer-events: none;
+      width: 32px;
+      height: 32px;
+    }
+
+    #virtual_keyboard_input {
+      position: fixed;
+      opacity: 0;
+      pointer-events: none;
+      left: -9999px;
+      top: -9999px;
+      width: 1px;
+      height: 1px;
+    }
   </style>
 </head>
 <body>
   <canvas id="wordcraft_canvas"></canvas>
   <div id="wordcraft_loading">Loading WordCraft&hellip;</div>
+
+  <!-- Hidden input for soft keyboard trigger -->
+  <input type="text" id="virtual_keyboard_input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+
+  <!-- Floating Trackpad Overlay Button -->
+  <div id="virtual_trackpad" aria-label="Virtual Trackpad">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9" />
+      <circle cx="12" cy="12" r="3" fill="currentColor" />
+      <line x1="12" y1="1" x2="12" y2="5" />
+      <line x1="12" y1="19" x2="12" y2="23" />
+      <line x1="1" y1="12" x2="5" y2="12" />
+      <line x1="19" y1="12" x2="23" y2="12" />
+    </svg>
+  </div>
+
+  <script>
+    (function() {
+      const trackpadBtn = document.getElementById('virtual_trackpad');
+      const hiddenInput = document.getElementById('virtual_keyboard_input');
+
+      let isPointerDown = false;
+      let pointerId = null;
+      let startX = 0;
+      let startY = 0;
+      let lastX = 0;
+      let lastY = 0;
+      let btnStartX = 0;
+      let btnStartY = 0;
+      let accumX = 0;
+      let accumY = 0;
+
+      let isRepositioning = false;
+      let longPressTimer = null;
+      let lastTapTime = 0;
+      let isSelectionMode = false;
+      let hasDraggedSinceDown = false;
+      let lastBackspaceTime = 0;
+
+      const MOVE_THRESHOLD_PX = 8;
+      const LONG_PRESS_MS = 500;
+      const DOUBLE_TAP_MS = 300;
+
+      function getCanvas() {
+        return document.querySelector('canvas') || document.getElementById('wordcraft_canvas');
+      }
+
+      function dispatchKey(key, code, shiftKey = false) {
+        const canvas = getCanvas();
+        if (!canvas) return;
+        const opts = {
+          key: key,
+          code: code || key,
+          shiftKey: shiftKey,
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+          view: window
+        };
+        canvas.dispatchEvent(new KeyboardEvent('keydown', opts));
+        canvas.dispatchEvent(new KeyboardEvent('keyup', opts));
+      }
+
+      function dispatchChar(ch) {
+        const canvas = getCanvas();
+        if (!canvas) return;
+        let code = 'Unidentified';
+        if (ch >= 'a' && ch <= 'z') code = 'Key' + ch.toUpperCase();
+        else if (ch >= 'A' && ch <= 'Z') code = 'Key' + ch;
+        else if (ch >= '0' && ch <= '9') code = 'Digit' + ch;
+        else if (ch === ' ') code = 'Space';
+
+        const isUpper = (ch >= 'A' && ch <= 'Z');
+        const opts = {
+          key: ch,
+          code: code,
+          shiftKey: isUpper,
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+          view: window
+        };
+        canvas.dispatchEvent(new KeyboardEvent('keydown', opts));
+        canvas.dispatchEvent(new KeyboardEvent('keyup', opts));
+      }
+
+      function handleBackspace() {
+        const now = Date.now();
+        if (now - lastBackspaceTime < 50) return;
+        lastBackspaceTime = now;
+        dispatchKey('Backspace', 'Backspace');
+      }
+
+      hiddenInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Backspace') {
+          handleBackspace();
+        } else if (e.key === 'Enter') {
+          dispatchKey('Enter', 'Enter');
+        }
+      });
+
+      hiddenInput.addEventListener('input', function(e) {
+        if (e.inputType === 'deleteContentBackward') {
+          handleBackspace();
+        } else {
+          const val = hiddenInput.value;
+          for (let i = 0; i < val.length; i++) {
+            dispatchChar(val[i]);
+          }
+        }
+        hiddenInput.value = '';
+      });
+
+      trackpadBtn.addEventListener('pointerdown', function(e) {
+        e.preventDefault();
+        trackpadBtn.setPointerCapture(e.pointerId);
+        pointerId = e.pointerId;
+        isPointerDown = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        lastX = e.clientX;
+        lastY = e.clientY;
+        accumX = 0;
+        accumY = 0;
+        hasDraggedSinceDown = false;
+
+        const now = Date.now();
+        isSelectionMode = (now - lastTapTime < DOUBLE_TAP_MS);
+
+        if (longPressTimer) clearTimeout(longPressTimer);
+        longPressTimer = setTimeout(function() {
+          if (isPointerDown && !hasDraggedSinceDown) {
+            isRepositioning = true;
+            trackpadBtn.classList.add('repositioning');
+            const rect = trackpadBtn.getBoundingClientRect();
+            btnStartX = rect.left;
+            btnStartY = rect.top;
+          }
+        }, LONG_PRESS_MS);
+      });
+
+      trackpadBtn.addEventListener('pointermove', function(e) {
+        if (!isPointerDown || e.pointerId !== pointerId) return;
+        e.preventDefault();
+
+        const dx = e.clientX - lastX;
+        const dy = e.clientY - lastY;
+
+        if (Math.abs(e.clientX - startX) > 4 || Math.abs(e.clientY - startY) > 4) {
+          hasDraggedSinceDown = true;
+          if (!isRepositioning && longPressTimer) {
+            clearTimeout(longPressTimer);
+            longPressTimer = null;
+          }
+        }
+
+        if (isRepositioning) {
+          let newLeft = btnStartX + (e.clientX - startX);
+          let newTop = btnStartY + (e.clientY - startY);
+
+          const maxLeft = window.innerWidth - trackpadBtn.offsetWidth;
+          const maxTop = window.innerHeight - trackpadBtn.offsetHeight;
+
+          newLeft = Math.max(0, Math.min(newLeft, maxLeft));
+          newTop = Math.max(0, Math.min(newTop, maxTop));
+
+          trackpadBtn.style.left = newLeft + 'px';
+          trackpadBtn.style.top = newTop + 'px';
+          trackpadBtn.style.bottom = 'auto';
+          trackpadBtn.style.right = 'auto';
+        } else {
+          accumX += dx;
+          accumY += dy;
+          lastX = e.clientX;
+          lastY = e.clientY;
+
+          while (accumX >= MOVE_THRESHOLD_PX) {
+            dispatchKey('ArrowRight', 'ArrowRight', isSelectionMode);
+            accumX -= MOVE_THRESHOLD_PX;
+          }
+          while (accumX <= -MOVE_THRESHOLD_PX) {
+            dispatchKey('ArrowLeft', 'ArrowLeft', isSelectionMode);
+            accumX += MOVE_THRESHOLD_PX;
+          }
+          while (accumY >= MOVE_THRESHOLD_PX) {
+            dispatchKey('ArrowDown', 'ArrowDown', isSelectionMode);
+            accumY -= MOVE_THRESHOLD_PX;
+          }
+          while (accumY <= -MOVE_THRESHOLD_PX) {
+            dispatchKey('ArrowUp', 'ArrowUp', isSelectionMode);
+            accumY += MOVE_THRESHOLD_PX;
+          }
+        }
+      });
+
+      function onPointerEnd(e) {
+        if (!isPointerDown || e.pointerId !== pointerId) return;
+        e.preventDefault();
+
+        if (longPressTimer) {
+          clearTimeout(longPressTimer);
+          longPressTimer = null;
+        }
+
+        try {
+          trackpadBtn.releasePointerCapture(e.pointerId);
+        } catch (err) {}
+
+        const now = Date.now();
+
+        if (isRepositioning) {
+          trackpadBtn.classList.remove('repositioning');
+          isRepositioning = false;
+          lastTapTime = 0;
+        } else {
+          if (!hasDraggedSinceDown) {
+            if (now - lastTapTime < DOUBLE_TAP_MS) {
+              hiddenInput.focus();
+              lastTapTime = 0;
+            } else {
+              lastTapTime = now;
+            }
+          } else {
+            lastTapTime = 0;
+          }
+        }
+
+        isPointerDown = false;
+        isSelectionMode = false;
+        hasDraggedSinceDown = false;
+      }
+
+      trackpadBtn.addEventListener('pointerup', onPointerEnd);
+      trackpadBtn.addEventListener('pointercancel', onPointerEnd);
+    })();
+  </script>
 </body>
 </html>
