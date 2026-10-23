@@ -1,0 +1,160 @@
+# Build only the web app (apps/wordcraft-web): check it, build the static site, and publish it on
+# GitHub Pages from main. The desktop apps (Windows, Linux, macOS) are not built here.
+#
+# One-time setup for publishing: Settings › Pages › Build and deployment › Source: GitHub Actions.
+# The site is then at https://<owner>.github.io/<repo>/ (add ?sample for a sample document).
+# Each run also offers the site as a download ("wordcraft-web" on the run's Summary page).
+name: Build web only
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Cargo*'
+      - 'apps/wordcraft-web/**'
+      - 'crates/**'
+      - 'assets/**'
+      - 'packaging/env.sh'
+      - 'packaging/web/**'
+      - '.github/workflows/build-web-only.yml'
+  pull_request:
+    paths:
+      - 'Cargo*'
+      - 'apps/wordcraft-web/**'
+      - 'crates/**'
+      - 'assets/**'
+      - 'packaging/env.sh'
+      - 'packaging/web/**'
+      - '.github/workflows/build-web-only.yml'
+  # "Run workflow" on the Actions tab: on main it also publishes.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# A new push to a pull request replaces its running build; on main, builds and deploys queue up.
+concurrency:
+  group: build-web-only-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: '0'
+  TRUNK_VERSION: '0.21.14'
+  TRUNK_SHA256: 'f2b4680cd239693a646a2795e4633c625328d7b2a044fbe749fa3a2fe9e7036b'
+  # Compiler errors and test panics show as annotations on the pull request's changed lines.
+  RUST_PROBLEM_MATCHER: >-
+    {"problemMatcher": [
+    {"owner": "rustc", "pattern": [
+    {"regexp": "^(error)(?:\\[(\\S+)\\])?: (.+)$", "severity": 1, "code": 2, "message": 3},
+    {"regexp": "^\\s*--> (.+?):(\\d+):(\\d+)$", "file": 1, "line": 2, "column": 3}]},
+    {"owner": "rust-test-panic", "pattern": [
+    {"regexp": "^thread '(.+)' panicked at (.+?):(\\d+):(\\d+):$", "code": 1, "file": 2, "line": 3, "column": 4},
+    {"regexp": "^(.+)$", "message": 1}]}]}
+
+jobs:
+  build:
+    name: Build web app
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+          targets: wasm32-unknown-unknown
+
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+
+      - name: Annotations for compiler errors
+        run: |
+          printf '%s\n' "$RUST_PROBLEM_MATCHER" > "$RUNNER_TEMP/rust-matcher.json"
+          echo "::add-matcher::$RUNNER_TEMP/rust-matcher.json"
+
+      - name: Formatting
+        run: cargo fmt --all -- --check
+
+      - name: Install Trunk
+        run: |
+          curl --proto '=https' --tlsv1.2 -fsSL -o "$RUNNER_TEMP/trunk.tar.gz" \
+            "https://github.com/trunk-rs/trunk/releases/download/v${TRUNK_VERSION}/trunk-x86_64-unknown-linux-gnu.tar.gz"
+          echo "${TRUNK_SHA256}  $RUNNER_TEMP/trunk.tar.gz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/trunk.tar.gz" -C "$HOME/.cargo/bin" trunk
+          trunk --version
+
+      # `trunk build --release` in apps/wordcraft-web (into dist/web), then the hosting files and
+      # the zip, as for a release (packaging/web/README.md).
+      - name: Build the site
+        run: packaging/web/package.sh
+
+      - name: Upload the site
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: wordcraft-web
+          path: target/web-package/
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Prepare GitHub Pages
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: dist/web
+
+  # The UI the web app shows (crates/ui-egui), tested natively: the tests draw with wgpu on a
+  # software Vulkan driver.
+  test:
+    name: UI tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install the libraries the UI tests need
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            pkg-config libxkbcommon-dev libwayland-dev libx11-dev libxcursor-dev libxrandr-dev \
+            libxi-dev libgtk-3-dev libfontconfig1-dev libfreetype-dev libvulkan1 mesa-vulkan-drivers
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+
+      - name: Annotations for compiler errors and test panics
+        run: |
+          printf '%s\n' "$RUST_PROBLEM_MATCHER" > "$RUNNER_TEMP/rust-matcher.json"
+          echo "::add-matcher::$RUNNER_TEMP/rust-matcher.json"
+
+      - name: Clippy
+        run: cargo clippy -p wordcraft-ui-egui --all-targets --locked -- -D warnings
+
+      - name: Tests
+        run: cargo test -p wordcraft-ui-egui --locked
+
+  deploy:
+    name: Publish on GitHub Pages
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: [build, test]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
