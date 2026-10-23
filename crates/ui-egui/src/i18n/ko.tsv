@@ -2510,3 +2510,22 @@ preview	Title	제목
 	All Fonts	모든 글꼴
 	Spike	스파이크
 	Insert Spike	스파이크 삽입
+
+# The mobile layout and the layout question at the first start.
+	Interface layout:	인터페이스 레이아웃:
+	Desktop	데스크톱
+	Mobile	모바일
+	Automatic uses the mobile layout on phones and narrow windows, and the desktop layout on larger screens.	자동은 휴대폰과 좁은 창에서는 모바일 레이아웃을, 큰 화면에서는 데스크톱 레이아웃을 사용합니다.
+	Choose a layout	레이아웃 선택
+	WordCraft can fit its layout to your screen. You can change it later in File › Options › General.	WordCraft는 화면에 맞게 레이아웃을 조정할 수 있습니다. 나중에 파일 › 옵션 › 일반에서 변경할 수 있습니다.
+	Recommended	권장
+	Switches between the mobile and desktop layouts by itself as the window changes size.	창 크기가 바뀌면 모바일 레이아웃과 데스크톱 레이아웃 사이를 자동으로 전환합니다.
+	Large touch buttons, a toolbar at the bottom and pages that fit the screen.	큰 터치 단추, 아래쪽 도구 모음, 화면에 맞는 페이지.
+	The full ribbon, rulers and status bar, for a mouse and keyboard.	전체 리본, 눈금자, 상태 표시줄. 마우스와 키보드에 적합합니다.
+	Screen size: {width} × {height}	화면 크기: {width} × {height}
+	Automatic uses the mobile layout on this screen.	이 화면에서는 자동이 모바일 레이아웃을 사용합니다.
+	Automatic uses the desktop layout on this screen.	이 화면에서는 자동이 데스크톱 레이아웃을 사용합니다.
+	Continue	계속
+	More options	옵션 더 보기
+	Use desktop layout	데스크톱 레이아웃 사용
+	Choose layout…	레이아웃 선택…

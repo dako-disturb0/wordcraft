@@ -635,9 +635,11 @@ use crate::keys;
 
 /// Keytips are suppressed while the Backstage or a modal dialog is open, or while a text field
 /// (not the canvas) has focus; the canvas lets Alt open keytips and `canvas_events` swallows
-/// typing while they show.
+/// typing while they show. The mobile layout has no ribbon to badge, and the layout question
+/// takes the keys while it is up.
 pub fn suppressed(app: &WordApp, ctx: &egui::Context) -> bool {
-    !app.ui.keytips_enabled || app.ui.backstage || app.dialog.is_some() || (ctx.egui_wants_keyboard_input() && !app.canvas.focused)
+    let mobile = app.mobile.active || app.mobile.setup.is_some();
+    !app.ui.keytips_enabled || app.ui.backstage || app.dialog.is_some() || mobile || (ctx.egui_wants_keyboard_input() && !app.canvas.focused)
 }
 
 /// Native backends report Alt through both key and modifier events, in either order. Track

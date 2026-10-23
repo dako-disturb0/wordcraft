@@ -2264,3 +2264,22 @@
 	All Fonts	Toutes les polices
 	Spike	Pique-notes
 	Insert Spike	Insérer le pique-notes
+
+# The mobile layout and the layout question at the first start.
+	Interface layout:	Disposition de l’interface :
+	Desktop	Bureau
+	Mobile	Mobile
+	Automatic uses the mobile layout on phones and narrow windows, and the desktop layout on larger screens.	Le mode Automatique utilise la disposition mobile sur les téléphones et les fenêtres étroites, et la disposition bureau sur les écrans plus grands.
+	Choose a layout	Choisissez une disposition
+	WordCraft can fit its layout to your screen. You can change it later in File › Options › General.	WordCraft peut adapter sa disposition à votre écran. Vous pourrez la modifier plus tard dans Fichier › Options › Général.
+	Recommended	Recommandé
+	Switches between the mobile and desktop layouts by itself as the window changes size.	Passe de lui-même de la disposition mobile à la disposition bureau selon la taille de la fenêtre.
+	Large touch buttons, a toolbar at the bottom and pages that fit the screen.	De grands boutons tactiles, une barre d’outils en bas et des pages ajustées à l’écran.
+	The full ribbon, rulers and status bar, for a mouse and keyboard.	Le ruban complet, les règles et la barre d’état, pour la souris et le clavier.
+	Screen size: {width} × {height}	Taille de l’écran : {width} × {height}
+	Automatic uses the mobile layout on this screen.	Le mode Automatique utilise la disposition mobile sur cet écran.
+	Automatic uses the desktop layout on this screen.	Le mode Automatique utilise la disposition bureau sur cet écran.
+	Continue	Continuer
+	More options	Plus d’options
+	Use desktop layout	Utiliser la disposition bureau
+	Choose layout…	Choisir la disposition…

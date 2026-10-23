@@ -925,8 +925,9 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
     }
     // Keys first, so this frame lays out and paints what was typed (handled after painting, a
     // keystroke showed one frame later). Focus is the canvas's from the last frame.
-    // While "Save changes?" is up, keys answer it rather than edit the document behind it.
-    if app.canvas.focused && !matches!(app.dialog, Some(crate::dialogs::Dialog::SaveChanges { .. })) {
+    // While "Save changes?" or the layout question is up, keys answer it rather than edit the
+    // document behind it.
+    if app.canvas.focused && !matches!(app.dialog, Some(crate::dialogs::Dialog::SaveChanges { .. })) && app.mobile.setup.is_none() {
         crate::keys::canvas_events(app, ui.ctx());
     } else {
         // Alt+numpad entry doesn't survive the canvas losing the keyboard.
@@ -944,7 +945,9 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
     // View › Switch Modes: dark paper, inverted document colours.
     let dark_page = app.session.view.dark_mode;
     let dark_paper = wordcraft_render::DARK_PAPER;
-    let show_ruler = app.session.view.ruler && app.session.view.mode == wordcraft_layout::ViewMode::Print && !app.session.view.read_mode;
+    // The mobile layout leaves the rulers' room to the page.
+    let show_ruler =
+        app.session.view.ruler && !app.mobile.active && app.session.view.mode == wordcraft_layout::ViewMode::Print && !app.session.view.read_mode;
     let (hruler, vruler, area) = if show_ruler {
         let h = Rect::from_min_max(pos2(full.min.x + RULER, full.min.y), pos2(full.max.x, full.min.y + RULER));
         let v = Rect::from_min_max(pos2(full.min.x, full.min.y + RULER), pos2(full.min.x + RULER, full.max.y));
@@ -1119,12 +1122,16 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
         app.canvas.auto_scroll.update(ui, area)
     };
     let delta = wheel_delta + auto_delta + middle_delta;
+    // The mobile layout on a touch screen: a finger drag scrolls the page (the scroll area takes
+    // the drag the page doesn't sense, from the first touch on) and a tap places the caret ([`mouse`]).
+    let touch = app.mobile.touch_scrolls();
+    let drag = if touch { egui::scroll_area::DragScroll::Always } else { egui::scroll_area::DragScroll::OnTouch };
     let mut scroll_area = egui::ScrollArea::both()
         .id_salt("canvas_scroll")
         .auto_shrink([false, false])
         // Bringing the caret into view glides there, or jumps with animation effects off.
         .animated(animate)
-        .scroll_source(egui::scroll_area::ScrollSource { mouse_wheel: false, ..Default::default() });
+        .scroll_source(egui::scroll_area::ScrollSource { mouse_wheel: false, drag, ..Default::default() });
     if app.session.view.read_mode {
         scroll_area = scroll_area.scroll_bar_visibility(egui::scroll_area::ScrollBarVisibility::AlwaysHidden);
     }
@@ -1156,7 +1163,8 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
         // chrome changes, and a new id dropped the keyboard focus, so the arrows, Page Up/Down
         // and Escape did nothing in Read Mode until the reader clicked a page (#1772).
         ui.advance_cursor_after_rect(content);
-        let resp = ui.interact(content, egui::Id::new("wordcraft_canvas"), Sense::click_and_drag());
+        let sense = if touch { Sense::click() } else { Sense::click_and_drag() };
+        let resp = ui.interact(content, egui::Id::new("wordcraft_canvas"), sense);
         if let Some(tr) = scroll_target {
             ui.scroll_to_rect(Rect::from_min_size(ui.min_rect().min + tr.min.to_vec2(), tr.size()), None);
         }
@@ -2337,7 +2345,13 @@ fn mouse(app: &mut WordApp, ui: &Ui, resp: &egui::Response, rects: &[Rect], layo
         let _ = app.run("select.paragraph", json!({}));
         return;
     }
-    let pressed = ui.input(|i| i.pointer.primary_pressed()) && resp.contains_pointer() && !over_balloon(app, p);
+    // On a touch screen in the mobile layout the caret goes where a tap lands: a press may start a
+    // scroll, so it waits for the release (`clicked_by` leaves out Space and Enter on the page).
+    let pressed = if app.mobile.touch_scrolls() {
+        resp.clicked_by(egui::PointerButton::Primary) && !over_balloon(app, p)
+    } else {
+        ui.input(|i| i.pointer.primary_pressed()) && resp.contains_pointer() && !over_balloon(app, p)
+    };
     if pressed {
         let now = ui.input(|i| i.time);
         let (delay, dist) = ui.ctx().options(|o| (o.input_options.max_double_click_delay, o.input_options.max_click_dist));

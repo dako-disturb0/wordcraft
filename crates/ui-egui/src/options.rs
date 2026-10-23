@@ -111,6 +111,19 @@ pub fn page(app: &mut WordApp, ui: &mut Ui) {
     ui.label(RichText::new(tl!("Options")).font(semibold(26.0)));
     ui.add_space(16.0);
     let current = if PANES.contains(&app.ui.options_pane.as_str()) { app.ui.options_pane.clone() } else { "general".to_string() };
+    // The mobile layout has no room for the pane list beside the settings: it wraps above them.
+    if app.mobile_layout() {
+        ui.horizontal_wrapped(|ui| {
+            for id in PANES {
+                if ui.add(egui::Button::selectable(current == id, tl!(pane_label(id))).min_size(vec2(0.0, 34.0))).clicked() {
+                    app.ui.options_pane = id.to_string();
+                }
+            }
+        });
+        ui.separator();
+        pane(app, ui, &current);
+        return;
+    }
     ui.horizontal_top(|ui| {
         ui.vertical(|ui| {
             ui.set_width(170.0);
@@ -138,18 +151,23 @@ pub fn page(app: &mut WordApp, ui: &mut Ui) {
         ui.add_space(20.0);
         ui.vertical(|ui| {
             ui.set_max_width(640.0);
-            match current.as_str() {
-                "display" => display(app, ui),
-                "proofing" => proofing(app, ui),
-                "save" => save(app, ui),
-                "language" => language(app, ui),
-                "accessibility" => accessibility(app, ui),
-                "advanced" => advanced(app, ui),
-                "agents" => agents(ui),
-                _ => general(app, ui),
-            }
+            pane(app, ui, &current);
         });
     });
+}
+
+/// The settings of the pane `id`.
+fn pane(app: &mut WordApp, ui: &mut Ui, id: &str) {
+    match id {
+        "display" => display(app, ui),
+        "proofing" => proofing(app, ui),
+        "save" => save(app, ui),
+        "language" => language(app, ui),
+        "accessibility" => accessibility(app, ui),
+        "advanced" => advanced(app, ui),
+        "agents" => agents(ui),
+        _ => general(app, ui),
+    }
 }
 
 fn section(ui: &mut Ui, title: &str) {
@@ -181,6 +199,7 @@ fn general(app: &mut WordApp, ui: &mut Ui) {
     section(ui, "Interface");
     theme_picker(app, ui);
     interface_size_picker(app, ui);
+    layout_picker(app, ui);
     ui.checkbox(&mut app.ui.mini_toolbar, tl!("Show the mini toolbar when text is selected"));
     let mut dark_page = app.session.view.dark_mode;
     if ui
@@ -557,6 +576,23 @@ fn theme_picker(app: &mut WordApp, ui: &mut Ui) {
             }
         });
     });
+}
+
+/// Interface layout: Automatic (the mobile layout on phones and in narrow windows), Mobile or
+/// Desktop. The web app asks at the first visit ([`crate::layout_setup`]).
+fn layout_picker(app: &mut WordApp, ui: &mut Ui) {
+    use crate::mobile::LayoutMode;
+    ui.horizontal(|ui| {
+        ui.label(tl!("Interface layout:"));
+        egui::ComboBox::from_id_salt("interface_layout").selected_text(tl!(app.ui.layout.label())).width(220.0).show_ui(ui, |ui| {
+            for m in LayoutMode::ALL {
+                if ui.selectable_label(app.ui.layout == m, tl!(m.label())).clicked() {
+                    let _ = app.run("ui.layout", json!({"value": m.code()}));
+                }
+            }
+        });
+    });
+    note(ui, "Automatic uses the mobile layout on phones and narrow windows, and the desktop layout on larger screens.");
 }
 
 /// Interface size (#475, #822): Auto, which keeps the system's display scale and shows the size it

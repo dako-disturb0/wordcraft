@@ -2665,3 +2665,22 @@ preview	Title	Esempio
 	All Fonts	Tutti i caratteri
 	Spike	Raccoglitore
 	Insert Spike	Inserisci raccoglitore
+
+# The mobile layout and the layout question at the first start.
+	Interface layout:	Layout dell'interfaccia:
+	Desktop	Desktop
+	Mobile	Mobile
+	Automatic uses the mobile layout on phones and narrow windows, and the desktop layout on larger screens.	Automatico usa il layout mobile su telefoni e finestre strette e il layout desktop su schermi più grandi.
+	Choose a layout	Scegli un layout
+	WordCraft can fit its layout to your screen. You can change it later in File › Options › General.	WordCraft può adattare il layout al tuo schermo. Puoi cambiarlo in seguito in File › Opzioni › Generale.
+	Recommended	Consigliato
+	Switches between the mobile and desktop layouts by itself as the window changes size.	Passa da solo dal layout mobile a quello desktop quando cambiano le dimensioni della finestra.
+	Large touch buttons, a toolbar at the bottom and pages that fit the screen.	Pulsanti grandi per il tocco, una barra degli strumenti in basso e pagine adattate allo schermo.
+	The full ribbon, rulers and status bar, for a mouse and keyboard.	La barra multifunzione completa, i righelli e la barra di stato, per mouse e tastiera.
+	Screen size: {width} × {height}	Dimensioni dello schermo: {width} × {height}
+	Automatic uses the mobile layout on this screen.	Automatico usa il layout mobile su questo schermo.
+	Automatic uses the desktop layout on this screen.	Automatico usa il layout desktop su questo schermo.
+	Continue	Continua
+	More options	Altre opzioni
+	Use desktop layout	Usa il layout desktop
+	Choose layout…	Scegli layout…

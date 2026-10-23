@@ -61,7 +61,9 @@ pub mod icons;
 pub mod ink;
 pub mod keys;
 pub mod keytips;
+pub mod layout_setup;
 pub mod mini_toolbar;
+pub mod mobile;
 pub mod objects;
 pub mod options;
 pub mod panes;
@@ -139,6 +141,11 @@ pub struct Services {
     /// Asked every frame, so a change in the system's settings shows at once: the host answers
     /// from memory and does any slow asking elsewhere. Without the hook, animation effects stay on.
     pub animations_enabled: Option<Box<dyn Fn() -> Option<bool>>>,
+    /// Whether the screen is a touch screen used as the main pointer (browsers: the `(pointer:
+    /// coarse)` media query), or `None` when the host can't say. Automatic layout shows the mobile
+    /// layout on a phone held sideways ([`mobile::auto_mobile`]); egui's own touch events count too
+    /// once one arrives. Asked every frame: the host answers from memory.
+    pub touch_screen: Option<Box<dyn Fn() -> Option<bool>>>,
     /// Desktop: the text on the system clipboard, if any. Ctrl+V gets it from egui's paste event;
     /// the ribbon and context-menu Paste read it here (#584).
     pub clipboard_text: Option<Box<dyn Fn() -> Option<String>>>,
@@ -327,6 +334,13 @@ pub struct UiState {
     /// File › Options › General: start on File › Home (Blank document, templates, Recent) when
     /// the app opens without a document (#766); on, as in Word. See [`WordApp::start_screen`].
     pub start_screen: bool,
+    /// The interface layout (File › Options › General, `ui.layout`): Desktop, Mobile, or Automatic,
+    /// which shows the mobile layout on phones and in narrow windows ([`mobile`]). An unknown saved
+    /// value reads as Desktop.
+    pub layout: mobile::LayoutMode,
+    /// The user has chosen the layout (the web app's layout question, File › Options): until then
+    /// the web app asks at start-up ([`WordApp::ask_layout`]).
+    pub layout_chosen: bool,
     /// File › Options › Display: print the page colour (off, as in Word).
     pub print_backgrounds: bool,
     /// File › Options › Display: update fields (dates, page numbers, SEQ…) before printing.
@@ -391,6 +405,8 @@ impl Default for UiState {
             mini_toolbar: true,
             alignment_guides: true,
             start_screen: true,
+            layout: mobile::LayoutMode::default(),
+            layout_chosen: false,
             print_backgrounds: false,
             update_fields_before_print: false,
             dictionary: Vec::new(),
@@ -496,6 +512,8 @@ pub struct WordApp {
     pub printing: printing::State,
     print_feedback_seen: Option<printing::Feedback>,
     pub canvas: canvas::CanvasState,
+    /// The mobile layout: whether it shows, its toolbar, the layout question ([`mobile`]).
+    pub mobile: mobile::MobileState,
     /// Content control frames, check boxes and lists on the page.
     pub controls: content_controls::ControlUi,
     pub dialog: Option<dialogs::Dialog>,
@@ -649,6 +667,7 @@ impl WordApp {
             printing: Default::default(),
             print_feedback_seen: None,
             canvas: canvas::CanvasState::default(),
+            mobile: mobile::MobileState::default(),
             controls: Default::default(),
             dialog: None,
             colors: None,
@@ -733,6 +752,19 @@ impl WordApp {
             self.no_document = Some(self.session.document_id());
         }
         self.ui.start_screen
+    }
+
+    /// The web app's first visit asks which layout to use ([`layout_setup`]): Automatic (the
+    /// mobile layout on phones and in narrow windows), Mobile or Desktop. The web app calls this
+    /// after [`WordApp::apply_prefs`], as it calls [`WordApp::start_screen`]; the desktop app and
+    /// [`WordApp::new`] never do, so tests, `ui_shot` and windows opened for a document start
+    /// without it. Once it has been answered, or the layout chosen in File › Options, it isn't
+    /// asked again. Returns whether it shows.
+    pub fn ask_layout(&mut self) -> bool {
+        if !self.ui.layout_chosen && self.mobile.setup.is_none() {
+            self.mobile.setup = Some(layout_setup::Setup::new(mobile::LayoutMode::Auto));
+        }
+        self.mobile.setup.is_some()
     }
 
     /// Whether a document is open: false from a Start screen launch until the user creates or
@@ -1627,6 +1659,24 @@ impl WordApp {
                 }
                 json!({"startScreen": self.ui.start_screen})
             }
+            "ui.layout" => {
+                // File › Options › General › Interface layout, the layout question: `auto` (the
+                // mobile layout on phones and in narrow windows), `mobile` or `desktop`; no value
+                // reads it. `mobile` in the result is whether the mobile layout shows now.
+                if let Some(v) = p.get("value") {
+                    match v.as_str().and_then(mobile::LayoutMode::from_code) {
+                        Some(mode) => self.set_layout_mode(mode),
+                        None => return Some(Err("`value` must be auto, mobile or desktop".into())),
+                    }
+                }
+                json!({"layout": self.ui.layout.code(), "chosen": self.ui.layout_chosen, "mobile": self.mobile.active})
+            }
+            // The layout question the web app asks at the first visit, again (the mobile menu's Choose
+            // layout…).
+            "ui.layoutSetup" => {
+                self.open_layout_setup();
+                json!({"open": true})
+            }
             // Shape Format › Text › Create Link: the next click on an empty text box links the
             // selected box to it (`shape.link` with that box as the target); Esc cancels.
             // Picture Format › Size › Crop: crop mode on the selected picture, or off (`crop`).
@@ -2093,7 +2143,14 @@ impl WordApp {
             return;
         }
         let t = theme::Tokens::get(&ctx);
-        self.escape_free = self.dialog.is_none() && !self.ui.backstage && self.ui.keytips == keytips::Phase::Off && !egui::Popup::is_any_open(&ctx);
+        // Phones and narrow windows: the layout setting may ask for the mobile layout ([`mobile`]).
+        self.follow_screen(&ctx);
+        let mobile_layout = self.mobile.active;
+        self.escape_free = self.dialog.is_none()
+            && !self.ui.backstage
+            && self.ui.keytips == keytips::Phase::Off
+            && !egui::Popup::is_any_open(&ctx)
+            && self.mobile.setup.is_none();
         // Keytips are read before layout so the frame paints the new state; badges paint after
         // the ribbon so they sit on top of it.
         crate::keytips::logic(self, &ctx);
@@ -2104,6 +2161,20 @@ impl WordApp {
         }
         if self.ui.backstage {
             backstage::show(self, ui);
+        } else if mobile_layout {
+            // The mobile layout: the bar at the top, the toolbar at the bottom, the page between.
+            let toolbar = self.has_document() && !self.session.view.focus_mode;
+            mobile::top_bar(self, ui);
+            if toolbar {
+                mobile::bottom_bar(self, ui);
+                panes::show(self, ui);
+            }
+            egui::CentralPanel::default().frame(egui::Frame::NONE.fill(t.canvas)).show(ui, |ui| {
+                if self.has_document() {
+                    canvas::show(self, ui);
+                }
+            });
+            mobile::toast(self, &ctx, toolbar);
         } else if !self.has_document() {
             // No document open (#1129): the ribbon greyed out but for Help, and no page.
             chrome::title_bar(self, ui);
@@ -2128,6 +2199,7 @@ impl WordApp {
         colors::show(self, &ctx);
         zotero::show_alert(self, &ctx);
         read_aloud::show(self, &ctx);
+        layout_setup::show(self, &ctx);
         crate::keytips::show(self, &ctx, ui);
         keys::global_shortcuts(self, &ctx);
         self.refocus_after_chrome_click(&ctx);
@@ -2497,6 +2569,8 @@ pub(crate) fn works_without_document(id: &str) -> bool {
             | "ui.discord"
             | "ui.caretAnimation"
             | "ui.startScreen"
+            | "ui.layout"
+            | "ui.layoutSetup"
     ) || id.starts_with("help.")
 }
 

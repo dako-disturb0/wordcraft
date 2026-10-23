@@ -2656,3 +2656,22 @@ preview	Title	Naslov
 	Moved to:	Premješteno u:
 	Spike	Skupljač
 	Insert Spike	Umetni iz skupljača
+
+# The mobile layout and the layout question at the first start.
+	Interface layout:	Raspored sučelja:
+	Desktop	Stolni
+	Mobile	Mobilni
+	Automatic uses the mobile layout on phones and narrow windows, and the desktop layout on larger screens.	Automatski koristi mobilni raspored na telefonima i u uskim prozorima, a stolni na većim zaslonima.
+	Choose a layout	Odaberite raspored
+	WordCraft can fit its layout to your screen. You can change it later in File › Options › General.	WordCraft može prilagoditi raspored vašem zaslonu. Kasnije ga možete promijeniti u Datoteka › Mogućnosti › Općenito.
+	Recommended	Preporučeno
+	Switches between the mobile and desktop layouts by itself as the window changes size.	Sam se prebacuje između mobilnog i stolnog rasporeda kad se promijeni veličina prozora.
+	Large touch buttons, a toolbar at the bottom and pages that fit the screen.	Veliki gumbi za dodir, alatna traka na dnu i stranice prilagođene zaslonu.
+	The full ribbon, rulers and status bar, for a mouse and keyboard.	Cijela vrpca, ravnala i traka stanja, za miš i tipkovnicu.
+	Screen size: {width} × {height}	Veličina zaslona: {width} × {height}
+	Automatic uses the mobile layout on this screen.	Automatski na ovom zaslonu koristi mobilni raspored.
+	Automatic uses the desktop layout on this screen.	Automatski na ovom zaslonu koristi stolni raspored.
+	Continue	Nastavi
+	More options	Više mogućnosti
+	Use desktop layout	Koristi stolni raspored
+	Choose layout…	Odaberi raspored…

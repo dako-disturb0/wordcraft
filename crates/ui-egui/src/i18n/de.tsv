@@ -2256,3 +2256,22 @@
 	All Fonts	Alle Schriftarten
 	Spike	Sammlung
 	Insert Spike	Sammlung einfügen
+
+# The mobile layout and the layout question at the first start.
+	Interface layout:	Oberflächenlayout:
+	Desktop	Desktop
+	Mobile	Mobil
+	Automatic uses the mobile layout on phones and narrow windows, and the desktop layout on larger screens.	„Automatisch“ verwendet auf Smartphones und in schmalen Fenstern das mobile Layout und auf größeren Bildschirmen das Desktop-Layout.
+	Choose a layout	Layout auswählen
+	WordCraft can fit its layout to your screen. You can change it later in File › Options › General.	WordCraft kann sein Layout an Ihren Bildschirm anpassen. Sie können es später unter Datei › Optionen › Allgemein ändern.
+	Recommended	Empfohlen
+	Switches between the mobile and desktop layouts by itself as the window changes size.	Wechselt selbstständig zwischen mobilem Layout und Desktop-Layout, wenn sich die Fenstergröße ändert.
+	Large touch buttons, a toolbar at the bottom and pages that fit the screen.	Große Touch-Schaltflächen, eine Symbolleiste unten und Seiten, die auf den Bildschirm passen.
+	The full ribbon, rulers and status bar, for a mouse and keyboard.	Das vollständige Menüband, Lineale und die Statusleiste, für Maus und Tastatur.
+	Screen size: {width} × {height}	Bildschirmgröße: {width} × {height}
+	Automatic uses the mobile layout on this screen.	„Automatisch“ verwendet auf diesem Bildschirm das mobile Layout.
+	Automatic uses the desktop layout on this screen.	„Automatisch“ verwendet auf diesem Bildschirm das Desktop-Layout.
+	Continue	Weiter
+	More options	Weitere Optionen
+	Use desktop layout	Desktop-Layout verwenden
+	Choose layout…	Layout auswählen…

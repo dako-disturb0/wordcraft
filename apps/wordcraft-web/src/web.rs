@@ -79,6 +79,9 @@ pub fn start() {
                     if !sample {
                         app.start_screen();
                     }
+                    // The first visit asks which layout to use: Automatic (the mobile layout on a
+                    // phone or in a narrow window), Mobile or Desktop.
+                    app.ask_layout();
                     Ok(Box::new(WebShell { app, inbox, messages, prefs }))
                 }),
             )
@@ -241,6 +244,7 @@ fn services(inbox: Inbox, ctx: egui::Context, dirty: Rc<Cell<bool>>, saves: Asyn
         inbox: Some(inbox),
         on_dirty: Some(Box::new(move |d| dirty.set(d))),
         animations_enabled: Some(animations_enabled()),
+        touch_screen: Some(touch_screen()),
         store_font: Some(Box::new(font_store::store)),
         forget_font: Some(Box::new(font_store::forget)),
         load_system_fonts: Some(Box::new(move || {
@@ -355,6 +359,14 @@ fn load_system_fonts(ctx: egui::Context, messages: Rc<RefCell<Vec<String>>>) {
 fn animations_enabled() -> Box<dyn Fn() -> Option<bool>> {
     let reduce = web_sys::window().and_then(|w| w.match_media("(prefers-reduced-motion: reduce)").ok().flatten());
     Box::new(move || reduce.as_ref().map(|query| !query.matches()))
+}
+
+/// Whether the main pointer is a finger, as the browser passes it on: the `(pointer: coarse)` media
+/// query, made once and asked every frame (it follows a tablet docked to a keyboard by itself).
+/// `None` when the browser can't say.
+fn touch_screen() -> Box<dyn Fn() -> Option<bool>> {
+    let coarse = web_sys::window().and_then(|w| w.match_media("(pointer: coarse)").ok().flatten());
+    Box::new(move || coarse.as_ref().map(|query| query.matches()))
 }
 
 /// Closing, reloading or leaving the tab with unsaved changes asks first. Browsers show their own

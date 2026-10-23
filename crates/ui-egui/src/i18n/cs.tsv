@@ -2648,3 +2648,22 @@ preview	Title	Ukázka
 	All Fonts	Všechna písma
 	Spike	Sběrač
 	Insert Spike	Vložit ze sběrače
+
+# The mobile layout and the layout question at the first start.
+	Interface layout:	Rozvržení rozhraní:
+	Desktop	Počítačové
+	Mobile	Mobilní
+	Automatic uses the mobile layout on phones and narrow windows, and the desktop layout on larger screens.	Automatické nastavení používá mobilní rozvržení na telefonech a v úzkých oknech a počítačové rozvržení na větších obrazovkách.
+	Choose a layout	Vyberte rozvržení
+	WordCraft can fit its layout to your screen. You can change it later in File › Options › General.	WordCraft může přizpůsobit rozvržení vaší obrazovce. Později ho můžete změnit v nabídce Soubor › Možnosti › Obecné.
+	Recommended	Doporučeno
+	Switches between the mobile and desktop layouts by itself as the window changes size.	Samo přepíná mezi mobilním a počítačovým rozvržením podle velikosti okna.
+	Large touch buttons, a toolbar at the bottom and pages that fit the screen.	Velká dotyková tlačítka, panel nástrojů dole a stránky přizpůsobené obrazovce.
+	The full ribbon, rulers and status bar, for a mouse and keyboard.	Celý pás karet, pravítka a stavový řádek pro myš a klávesnici.
+	Screen size: {width} × {height}	Velikost obrazovky: {width} × {height}
+	Automatic uses the mobile layout on this screen.	Automatické nastavení na této obrazovce používá mobilní rozvržení.
+	Automatic uses the desktop layout on this screen.	Automatické nastavení na této obrazovce používá počítačové rozvržení.
+	Continue	Pokračovat
+	More options	Další možnosti
+	Use desktop layout	Použít počítačové rozvržení
+	Choose layout…	Vybrat rozvržení…
